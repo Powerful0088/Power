@@ -1,0 +1,21 @@
+
+import requests
+from bs4 import BeautifulSoup
+import os
+from tqdm import tqdm
+
+url = "https://www.google.com/search?sca_esv=a835f771045fe61e&sxsrf=ADLYWILQGV_sVTFaZTtEOOYBlX9g-rNchg:1721223958771&q=images&udm=2&fbs=AEQNm0Aa4sjWe7Rqy32pFwRj0UkWd8nbOJfsBGGB5IQQO6L3J_86uWOeqwdnV0yaSF-x2joZDvir2QxhZkTA8rK1etu4LFOdv5B3tjPZyL-74ZrWvqnShKeDz6CTRWa6k8V32jn-AyWDyeqhDHJlpR-BKqLzJCkSoX3aH4QMc1t2Qi8m5pvE-SSARvqgsy2CZYllUx2tb_I-&sa=X&ved=2ahUKEwigx5D1mq6HAxUy8QIHHWPwA4UQtKgLegQIExAB&biw=1024&bih=641&dpr=1"
+
+req = requests.get(url)
+
+souped = BeautifulSoup(req.content, "html.parser")
+
+page = souped.find_all('img')
+page = page[3:-1]
+
+for img in tqdm(page):
+    imglink = img.attrs.get('src')
+    image = requests.get(imglink).content
+    filename = r"esan" + imglink[imglink.rfind('/'):]
+    file = (filename, 'wb')
+    print(file.write(image))
